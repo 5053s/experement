@@ -15,6 +15,9 @@
 
 #include <chainparamsseeds.h>
 
+#include "arith_uint256.h"
+#include "crypto/scrypt.h"
+
 static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesisOutputScript, uint32_t nTimeTx, uint32_t nTimeBlock, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
     CMutableTransaction txNew;
@@ -53,6 +56,12 @@ static CBlock CreateGenesisBlock(uint32_t nTimeTx, uint32_t nTimeBlock, uint32_t
     const char* pszTimestamp = "Fighting flares on outskirts of Tripoli";
     const CScript genesisOutputScript = CScript();
     return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTimeTx, nTimeBlock, nNonce, nBits, nVersion, genesisReward);
+}
+
+void CChainParams::UpdateVersionBitsParameters(Consensus::DeploymentPos d, int64_t nStartTime, int64_t nTimeout)
+{
+    consensus.vDeployments[d].nStartTime = nStartTime;
+    consensus.vDeployments[d].nTimeout = nTimeout;
 }
 
 /**
@@ -120,12 +129,12 @@ public:
         // service bits we want, but we should get them updated to support all service bits wanted by any
         // release ASAP to avoid it where possible.
         vSeeds.emplace_back("dnsseed.sumcoinpool.org");
-	    vSeeds.emplace_back("dnsseed.minesum.com");
+	vSeeds.emplace_back("dnsseed.minesum.com");
         vSeeds.emplace_back("dnsseed.sumcoinwallet.org");
-	    vSeeds.emplace_back("dnsseed.sumnode.io");
-	    vSeeds.emplace_back("dnsseed.sumcoinmining.org");
-	    vSeeds.emplace_back("sumdnsseed.moonypool.com");
-	    vSeeds.emplace_back("dnsseed.sumcoin.space");
+	vSeeds.emplace_back("dnsseed.sumnode.io");
+	vSeeds.emplace_back("dnsseed.sumcoinmining.org");
+	vSeeds.emplace_back("sumdnsseed.moonypool.com");
+	vSeeds.emplace_back("dnsseed.sumcoin.space");
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,63); //  hexid = "3F"
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,5);  //
